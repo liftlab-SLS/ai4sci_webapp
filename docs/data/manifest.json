@@ -1,0 +1,54 @@
+{
+ "communities": [
+  {
+   "id": "community_14",
+   "label": "14 — arbitration & dispute resolution",
+   "n_papers": 552,
+   "has_themes": false,
+   "has_answers": false,
+   "has_questions": true,
+   "has_deduped": true,
+   "in_explorer": true
+  },
+  {
+   "id": "community_130",
+   "label": "130 — promissory & gratuitous promises",
+   "n_papers": 264,
+   "has_themes": true,
+   "has_answers": false,
+   "has_questions": true,
+   "has_deduped": true,
+   "in_explorer": true
+  },
+  {
+   "id": "community_131",
+   "label": "131 — contract interpretation & gap-filling",
+   "n_papers": 278,
+   "has_themes": false,
+   "has_answers": false,
+   "has_questions": true,
+   "has_deduped": true,
+   "in_explorer": true
+  },
+  {
+   "id": "community_177",
+   "label": "177 — sovereign debt & boilerplate stickiness",
+   "n_papers": 162,
+   "has_themes": true,
+   "has_answers": true,
+   "has_questions": true,
+   "has_deduped": true,
+   "in_explorer": true
+  },
+  {
+   "id": "community_225",
+   "label": "225 — contract theory & remedies",
+   "n_papers": 180,
+   "has_themes": true,
+   "has_answers": false,
+   "has_questions": true,
+   "has_deduped": true,
+   "in_explorer": true
+  }
+ ]
+}

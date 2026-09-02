@@ -1,0 +1,690 @@
+<title>Pipeline Explorer — Raw Themes</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #F7F5F0;
+    --panel: #FFFFFF;
+    --text: #1C2231;
+    --muted: #6B7180;
+    --faint: #9AA0AC;
+    --line: #E3DFD6;
+    --line-strong: #D2CCBF;
+    --accent: #2F4B7C;
+    --accent-soft: #EAEFF6;
+    --accent-2: #A8843E;
+    --accent-2-soft: #F4ECD9;
+    --chrome: #1C2231;
+    --chrome-text: #EDEBE4;
+    --danger: #A23B3B;
+    --serif: Georgia, "Times New Roman", "Iowan Old Style", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    --shadow: 0 1px 2px rgba(28,34,49,.04), 0 4px 16px rgba(28,34,49,.05);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--ground);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  a { color: var(--accent); }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---- Topbar ---- */
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--chrome); color: var(--chrome-text);
+    padding: 14px 24px; border-bottom: 3px solid var(--accent-2);
+    flex-shrink: 0;
+  }
+  .topbar .mark { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -.015em; white-space: nowrap; }
+  .topbar .mark .dot { color: var(--accent-2); }
+  .topbar .tagline { font-size: 12px; color: #A7ABB6; border-left: 1px solid #3A4256; padding-left: 16px; letter-spacing: .02em; }
+  .topbar .proto-link {
+    margin-left: 4px; white-space: nowrap; font-size: 12.5px; color: #C7CAD3;
+    text-decoration: none; border: 1px solid #3A4256; border-radius: 7px;
+    padding: 6px 11px; transition: all .12s;
+  }
+  .topbar .proto-link:first-of-type { margin-left: auto; }
+  .topbar .proto-link:hover { color: #fff; border-color: var(--accent-2); background: rgba(168,132,62,.12); }
+  .subnav {
+    display: flex; align-items: end; gap: 14px; flex-wrap: wrap;
+    padding: 14px 24px; border-bottom: 1px solid var(--line); background: #FBFAF6;
+    flex-shrink: 0;
+  }
+  .subnav-block { min-width: 240px; }
+  .subnav-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--faint); font-weight: 600; margin-bottom: 6px;
+  }
+  .subnav-select {
+    min-width: 280px; max-width: 520px; width: min(520px, 100%);
+    font-family: var(--sans); font-size: 14px; color: var(--text);
+    padding: 9px 11px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff;
+  }
+  .subnav-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .page-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .page-tab {
+    text-decoration: none; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid #C9D6E8; border-radius: 8px; padding: 9px 12px;
+  }
+  .page-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .page-tab.disabled {
+    color: var(--faint); background: #F2F0EA; border-color: var(--line);
+    cursor: default; pointer-events: none; font-weight: 500;
+  }
+  .dl-csv { margin-top: 10px; width: 100%; font-size: 12.5px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid #C9D6E8; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+  .dl-csv:hover { background: #DCE6F3; }
+  .cohort-badge {
+    display: inline-flex; align-items: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+    background: #E8F1EA; color: #2E5E39; border: 1px solid #BFD5C3;
+  }
+
+  /* ---- Main layout ---- */
+  .page-body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    min-height: 0;
+  }
+  @media (max-width: 900px) { .page-body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } }
+
+  /* ---- Theme list column ---- */
+  .list-col {
+    display: flex; flex-direction: column; min-height: 0;
+    border-right: 1px solid var(--line); background: #FBFAF6;
+    overflow: hidden;
+  }
+  .list-header {
+    padding: 16px 18px 12px; border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .list-header .eyebrow {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--faint); margin-bottom: 8px; font-weight: 600;
+  }
+  .search-wrap { position: relative; }
+  .search-wrap svg {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--faint); pointer-events: none;
+  }
+  #themeSearch {
+    width: 100%; font-family: inherit; font-size: 14px; color: var(--text);
+    padding: 9px 11px 9px 34px; border: 1px solid var(--line-strong); border-radius: 8px;
+    background: #fff;
+  }
+  #themeSearch:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .list-count {
+    padding: 8px 18px 6px; font-size: 12px; color: var(--muted);
+    font-weight: 500; border-bottom: 1px solid var(--line); flex-shrink: 0;
+  }
+  .theme-list {
+    flex: 1; overflow-y: auto; padding: 6px 10px 20px;
+  }
+
+  /* ---- Theme row ---- */
+  .theme-row {
+    border: 1px solid transparent; border-radius: 8px;
+    padding: 10px 12px; margin-bottom: 3px;
+    background: none; cursor: pointer; position: relative;
+  }
+  .theme-row:hover { background: #fff; border-color: var(--line); }
+  .theme-row.active { background: #fff; border-color: var(--accent); box-shadow: var(--shadow); }
+  .theme-row-head { display: flex; align-items: flex-start; gap: 8px; }
+  .theme-name {
+    font-family: var(--serif); font-size: 14px; line-height: 1.35;
+    color: var(--text); flex: 1; min-width: 0;
+  }
+  .theme-row.active .theme-name { color: var(--accent); font-weight: 600; }
+  .run-tag {
+    font-size: 10.5px; color: #7A5E22; background: var(--accent-2-soft);
+    border: 1px solid #E0CFA6; border-radius: 20px; padding: 2px 7px;
+    white-space: nowrap; flex-shrink: 0; margin-top: 1px; font-weight: 600;
+  }
+  .theme-def {
+    font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.4;
+  }
+  .list-empty { padding: 24px 18px; color: var(--muted); font-size: 13.5px; }
+
+  /* ---- Similarity panel ---- */
+  .sim-col {
+    display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  }
+  .sim-inner { flex: 1; overflow-y: auto; padding: 28px 36px 60px; }
+  @media (max-width: 900px) { .sim-inner { padding: 20px 18px 50px; } }
+
+  .sim-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; color: var(--faint); gap: 12px; text-align: center;
+    padding: 40px;
+  }
+  .sim-placeholder svg { opacity: .35; }
+  .sim-placeholder p { font-size: 14px; max-width: 320px; margin: 0; line-height: 1.5; }
+
+  .sim-header { margin-bottom: 22px; }
+  .sim-theme-name {
+    font-family: var(--serif); font-size: 22px; line-height: 1.2;
+    margin-bottom: 8px; max-width: 760px;
+  }
+  .sim-theme-def {
+    font-size: 14.5px; color: var(--muted); max-width: 700px; line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .sim-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .sim-run-tag {
+    font-size: 12px; color: #7A5E22; background: var(--accent-2-soft);
+    border: 1px solid #E0CFA6; border-radius: 20px; padding: 3px 10px;
+    font-weight: 600;
+  }
+  .redundancy-hint {
+    font-size: 12.5px; color: var(--accent); background: var(--accent-soft);
+    border: 1px solid #C9D6E8; border-radius: 20px; padding: 3px 10px;
+    font-weight: 600;
+  }
+  .redundancy-hint.warn { color: #7A5E22; background: var(--accent-2-soft); border-color: #E0CFA6; }
+  .redundancy-hint.none { color: var(--muted); background: none; border-color: var(--line); font-weight: 500; }
+
+  .sim-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--faint); font-weight: 600; margin: 0 0 12px; padding-top: 4px;
+    border-top: 1px solid var(--line); padding-top: 20px; margin-top: 8px;
+  }
+  .sim-no-neighbors { color: var(--muted); font-size: 14px; padding: 16px 0; }
+
+  /* ---- Similarity item ---- */
+  .sim-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    border: 1px solid var(--line); border-radius: 9px;
+    padding: 12px 14px; margin-bottom: 8px; background: #fff;
+    cursor: pointer; transition: border-color .12s, box-shadow .12s;
+    text-align: left; width: 100%;
+  }
+  .sim-item:hover { border-color: var(--line-strong); box-shadow: var(--shadow); }
+  .sim-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .sim-rank {
+    font-family: var(--mono); font-size: 11px; color: var(--faint);
+    min-width: 22px; text-align: right; flex-shrink: 0; padding-top: 2px;
+  }
+  .sim-item-body { flex: 1; min-width: 0; }
+  .sim-item-name {
+    font-family: var(--serif); font-size: 14.5px; line-height: 1.35;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .sim-item-def { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .sim-item-foot { display: flex; align-items: center; gap: 7px; margin-top: 6px; }
+  .sim-run-tag-sm {
+    font-size: 10.5px; color: #7A5E22; background: var(--accent-2-soft);
+    border: 1px solid #E0CFA6; border-radius: 20px; padding: 1px 7px;
+    font-weight: 600; white-space: nowrap;
+  }
+  .jump-hint {
+    font-size: 11px; color: var(--faint); margin-left: auto; white-space: nowrap;
+  }
+
+  /* ---- Cosine badge ---- */
+  .cos-badge {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 700;
+    padding: 4px 9px; border-radius: 8px; white-space: nowrap; flex-shrink: 0;
+    min-width: 48px; text-align: center; align-self: flex-start;
+    margin-top: 1px;
+  }
+  /* color tiers by cosine value — set via inline style on the element */
+
+  /* ---- Loading / error states ---- */
+  .center-load {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; color: var(--muted); gap: 12px;
+  }
+  .spinner {
+    width: 26px; height: 26px; border: 3px solid var(--line);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+  .error-box {
+    background: #F7E9E9; border: 1px solid #E3C3C3; color: var(--danger);
+    border-radius: var(--radius); padding: 18px 22px; max-width: 520px;
+    margin: 40px auto;
+  }
+  .error-box h3 { font-size: 16px; margin-bottom: 8px; color: var(--danger); }
+  .error-box p { margin: 0; font-size: 14px; }
+</style>
+
+<header class="topbar">
+  <span class="mark">Pipeline Explorer<span class="dot">.</span></span>
+  <span class="tagline">Debates in legal scholarship, from abstract to consensus</span>
+  <a class="proto-link" href="../">← Explorer</a>
+</header>
+<div class="subnav">
+  <div class="subnav-block">
+    <div class="subnav-label">Community</div>
+    <select id="communitySelect" class="subnav-select" aria-label="Select community"></select>
+  </div>
+  <div>
+    <div class="subnav-label">Pages</div>
+    <div class="page-tabs" id="pageTabs"></div>
+  </div>
+</div>
+
+<div class="page-body">
+  <!-- Left: scrollable theme list -->
+  <aside class="list-col">
+    <div class="list-header">
+      <div class="eyebrow">Raw Themes</div>
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input type="search" id="themeSearch" placeholder="Filter by name or definition…" autocomplete="off" aria-label="Filter themes">
+      </div>
+      <button id="dlCsv" class="dl-csv" type="button">⬇ Download CSV</button>
+    </div>
+    <div class="list-count" id="listCount"></div>
+    <div class="theme-list" id="themeList">
+      <div class="center-load">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>Loading themes…</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right: similarity panel -->
+  <main class="sim-col">
+    <div class="sim-inner" id="simPanel">
+      <div class="sim-placeholder">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="18" cy="18" r="10" stroke="#9AA0AC" stroke-width="2"/>
+          <circle cx="33" cy="33" r="8" stroke="#9AA0AC" stroke-width="2"/>
+          <line x1="26" y1="26" x2="28" y2="28" stroke="#9AA0AC" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <p>Select a theme on the left to explore its most-similar neighbors.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+"use strict";
+
+/* ================================================================
+   State
+   ================================================================ */
+const state = {
+  data: null,          // full JSON payload
+  themes: [],          // flat themes array
+  filter: "",
+  activeIdx: null,     // currently selected theme index (into themes[])
+  pageIndex: null,
+};
+
+/* ================================================================
+   Helpers
+   ================================================================ */
+const esc = (s) => String(s == null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
+function pageLabel(meta) {
+  const explorerLabel = String((meta && meta.explorer_label) || "").trim();
+  if (explorerLabel) return explorerLabel;
+  const id = String((meta && meta.id) || "").trim();
+  const label = String((meta && meta.label) || "").trim();
+  const fromId = id.match(/^community_(\d+)$/);
+  if (fromId) return `Community ${fromId[1]}`;
+  const fromLabel = label.match(/^community_(\d+)\b/i);
+  if (fromLabel) return `Community ${fromLabel[1]}`;
+  return label || id;
+}
+
+function pageSelectLabel(meta) {
+  const base = pageLabel(meta);
+  const nPapers = Number((meta && meta.n_papers) || 0);
+  return nPapers ? `${base} — ${nPapers.toLocaleString()} papers` : base;
+}
+
+function cohortBadgeHtml(meta) {
+  return meta && meta.is_full_scale_1pct ? ' <span class="cohort-badge">Full-scale 1%</span>' : "";
+}
+
+function tabLabel(base, count) {
+  const n = Number(count || 0);
+  return n ? `${base} (${n.toLocaleString()})` : base;
+}
+
+async function loadPageIndex() {
+  try {
+    const res = await fetch("../data/pages/community_index.json", { cache: "no-cache" });
+    if (!res.ok) return { communities: [] };
+    return res.json();
+  } catch (_) {
+    return { communities: [] };
+  }
+}
+
+function truncate(s, n) {
+  s = String(s || "");
+  return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s;
+}
+
+/* Cosine → color: badge bg/fg pair */
+function cosBadgeStyle(c) {
+  if (c >= 0.95) return "background:#1A3A6C;color:#fff;";          // very high — deep accent
+  if (c >= 0.90) return "background:#2F4B7C;color:#fff;";          // high — accent
+  if (c >= 0.85) return "background:#EAEFF6;color:#2F4B7C;border:1px solid #C9D6E8;";  // notable
+  if (c >= 0.80) return "background:#F4ECD9;color:#7A5E22;border:1px solid #E0CFA6;";  // moderate
+  if (c >= 0.70) return "background:#F7F5F0;color:#6B7180;border:1px solid #D2CCBF;";  // low
+  return "background:#F7F5F0;color:#9AA0AC;border:1px solid #E3DFD6;";               // very low
+}
+
+/* Count neighbors above threshold */
+function countAbove(simArr, threshold) {
+  if (!simArr || !simArr.length) return 0;
+  return simArr.filter(s => s.c >= threshold).length;
+}
+
+/* ================================================================
+   Query param + data loading
+   ================================================================ */
+function getCommunityParam() {
+  const p = new URLSearchParams(window.location.search);
+  return p.get("community") || "community_177";
+}
+
+async function loadData(communityId) {
+  const url = `../data/pages/${encodeURIComponent(communityId)}_raw_themes.json`;
+  const res = await fetch(url, { cache: "no-cache" });
+  if (!res.ok) throw new Error(`HTTP ${res.status} — could not fetch ${url}`);
+  return res.json();
+}
+
+function buildPageTabs(communityId, meta) {
+  const tabs = [
+    {
+      key: "raw",
+      label: tabLabel("Raw themes", meta && meta.n_raw_themes),
+      href: `./raw_themes.html?community=${encodeURIComponent(communityId)}`,
+      enabled: !!(meta && meta.has_raw_themes),
+    },
+    {
+      key: "deduped",
+      label: tabLabel("Deduped themes", meta && meta.n_deduped_themes),
+      href: `./deduped_themes.html?community=${encodeURIComponent(communityId)}`,
+      enabled: !!(meta && meta.has_deduped_themes),
+    },
+  ];
+  return tabs.map(tab => {
+    const cls = ["page-tab"];
+    if (tab.key === "raw") cls.push("active");
+    if (!tab.enabled) cls.push("disabled");
+    if (!tab.enabled) return `<span class="${cls.join(" ")}">${esc(tab.label)}</span>`;
+    return `<a class="${cls.join(" ")}" href="${tab.href}">${esc(tab.label)}</a>`;
+  }).join("");
+}
+
+function initPageChrome(requestedId) {
+  const communities = ((state.pageIndex && state.pageIndex.communities) || [])
+    .filter(c => c.has_raw_themes);
+  const sel = document.getElementById("communitySelect");
+  const resolved = communities.some(c => c.id === requestedId)
+    ? requestedId
+    : (communities[0] && communities[0].id) || requestedId;
+  if (sel) {
+    sel.innerHTML = communities.length
+      ? communities.map(c => `<option value="${esc(c.id)}">${esc(pageSelectLabel(c))}</option>`).join("")
+      : `<option value="${esc(resolved)}">${esc(resolved)}</option>`;
+    sel.value = resolved;
+    sel.onchange = () => {
+      window.location.search = "?community=" + encodeURIComponent(sel.value);
+    };
+  }
+  const meta = communities.find(c => c.id === resolved) || null;
+  document.getElementById("pageTabs").innerHTML = buildPageTabs(resolved, meta);
+  return { communityId: resolved, meta };
+}
+
+/* ================================================================
+   Rendering: theme list
+   ================================================================ */
+function filteredThemes() {
+  const q = state.filter.trim().toLowerCase();
+  if (!q) return state.themes.map((t, i) => ({ t, i }));
+  return state.themes
+    .map((t, i) => ({ t, i }))
+    .filter(({ t }) =>
+      (t.name || "").toLowerCase().includes(q) ||
+      (t.definition || "").toLowerCase().includes(q)
+    );
+}
+
+function renderThemeList() {
+  const list = document.getElementById("themeList");
+  const countEl = document.getElementById("listCount");
+  const items = filteredThemes();
+  const total = state.themes.length;
+
+  if (!items.length) {
+    countEl.textContent = `0 of ${total} themes`;
+    list.innerHTML = `<div class="list-empty">${total ? "No themes match &ldquo;" + esc(state.filter) + "&rdquo;." : "This community has no themes."}</div>`;
+    return;
+  }
+  countEl.textContent = state.filter
+    ? `${items.length} of ${total} themes`
+    : `${total} themes`;
+
+  list.innerHTML = items.map(({ t, i }) => {
+    const active = i === state.activeIdx ? " active" : "";
+    return `<div class="theme-row${active}" data-idx="${i}" role="button" tabindex="0"
+        aria-selected="${i === state.activeIdx}" id="theme-row-${i}">
+      <div class="theme-row-head">
+        <span class="theme-name">${esc(t.name || "Untitled theme")}</span>
+        <span class="run-tag">run ${esc(t.run)}</span>
+      </div>
+      ${t.definition ? `<div class="theme-def">${esc(truncate(t.definition, 140))}</div>` : ""}
+    </div>`;
+  }).join("");
+
+  // Wire clicks + keyboard
+  list.querySelectorAll(".theme-row").forEach(el => {
+    const idx = Number(el.getAttribute("data-idx"));
+    el.addEventListener("click", () => selectTheme(idx));
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectTheme(idx); }
+    });
+  });
+}
+
+/* ================================================================
+   Rendering: similarity panel
+   ================================================================ */
+function renderSimPanel() {
+  const panel = document.getElementById("simPanel");
+  if (state.activeIdx === null) {
+    panel.innerHTML = `<div class="sim-placeholder">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="18" cy="18" r="10" stroke="#9AA0AC" stroke-width="2"/>
+        <circle cx="33" cy="33" r="8" stroke="#9AA0AC" stroke-width="2"/>
+        <line x1="26" y1="26" x2="28" y2="28" stroke="#9AA0AC" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <p>Select a theme on the left to explore its most-similar neighbors.</p>
+    </div>`;
+    return;
+  }
+
+  const t = state.themes[state.activeIdx];
+  if (!t) { panel.innerHTML = ""; return; }
+
+  const sim = t.sim || [];
+  const above85 = countAbove(sim, 0.85);
+  const hasAny = sim.length > 0;
+
+  let hintClass = "none";
+  let hintText = "0 neighbors ≥ 0.85";
+  if (above85 >= 10) { hintClass = "warn"; hintText = `${above85} neighbors ≥ 0.85 — possible redundancy`; }
+  else if (above85 > 0) { hintClass = ""; hintText = `${above85} neighbor${above85 === 1 ? "" : "s"} ≥ 0.85`; }
+
+  const simItems = sim.map((s, rank) => {
+    const neighbor = state.themes[s.j];
+    if (!neighbor) return ""; // guard: index out of range
+    const cosStr = s.c.toFixed(3);
+    const style = cosBadgeStyle(s.c);
+    const isHigh = s.c >= 0.85;
+    return `<button class="sim-item${isHigh ? " high" : ""}" data-target="${s.j}"
+        title="Jump to this theme in the list" aria-label="View theme: ${esc(neighbor.name)}">
+      <span class="sim-rank">${rank + 1}.</span>
+      <span class="sim-item-body">
+        <span class="sim-item-name">${esc(neighbor.name || "Untitled theme")}</span>
+        ${neighbor.definition ? `<span class="sim-item-def">${esc(truncate(neighbor.definition, 160))}</span>` : ""}
+        <span class="sim-item-foot">
+          <span class="sim-run-tag-sm">run ${esc(neighbor.run)}</span>
+          <span class="jump-hint">click to jump ↗</span>
+        </span>
+      </span>
+      <span class="cos-badge" style="${style}">${cosStr}</span>
+    </button>`;
+  }).join("");
+
+  panel.innerHTML = `
+    <div class="sim-header">
+      <h2 class="sim-theme-name">${esc(t.name || "Untitled theme")}</h2>
+      ${t.definition ? `<p class="sim-theme-def">${esc(t.definition)}</p>` : ""}
+      <div class="sim-meta">
+        <span class="sim-run-tag">run ${esc(t.run)}</span>
+        <span class="redundancy-hint ${hintClass}">${hintText}</span>
+      </div>
+    </div>
+    <div class="sim-section-title">
+      Most similar themes ${hasAny ? `— top ${sim.length}` : ""}
+    </div>
+    ${hasAny
+      ? `<div id="simItems">${simItems}</div>`
+      : `<p class="sim-no-neighbors">No similarity data for this theme.</p>`
+    }
+  `;
+
+  // Wire clicks: jump to a neighbor in the list
+  if (hasAny) {
+    panel.querySelectorAll(".sim-item").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const targetIdx = Number(btn.getAttribute("data-target"));
+        jumpToTheme(targetIdx);
+      });
+    });
+  }
+}
+
+/* ================================================================
+   Interaction
+   ================================================================ */
+function selectTheme(idx) {
+  state.activeIdx = (state.activeIdx === idx) ? null : idx;  // toggle: click the active row again to deselect
+  renderThemeList();  // update active highlight
+  renderSimPanel();
+  // Scroll panel back to top
+  const panel = document.getElementById("simPanel");
+  if (panel) panel.scrollTop = 0;
+}
+
+/* Jump to a theme: select it AND scroll it into view in the list */
+function jumpToTheme(idx) {
+  // Clear filter so the target is visible
+  if (state.filter) {
+    state.filter = "";
+    const searchEl = document.getElementById("themeSearch");
+    if (searchEl) searchEl.value = "";
+  }
+  state.activeIdx = idx;
+  renderThemeList();
+  renderSimPanel();
+
+  // Scroll the list item into view
+  const el = document.getElementById(`theme-row-${idx}`);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    el.focus({ preventScroll: true });
+  }
+  const panel = document.getElementById("simPanel");
+  if (panel) panel.scrollTop = 0;
+}
+
+function toCSV(rows, headers) {
+  const q = v => { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  return [headers.join(","), ...rows.map(r => headers.map(h => q(r[h])).join(","))].join("\n");
+}
+function downloadCSV(filename, csv) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* ================================================================
+   Boot
+   ================================================================ */
+async function init() {
+  state.pageIndex = await loadPageIndex();
+  const { communityId, meta } = initPageChrome(getCommunityParam());
+
+  // Update page title and topbar
+  document.title = meta ? `Pipeline Explorer — ${pageLabel(meta)} Raw Themes` : `Pipeline Explorer — Raw Themes`;
+  const headerEyebrow = document.querySelector(".list-header .eyebrow");
+  if (headerEyebrow) {
+    headerEyebrow.innerHTML = `Raw Themes${cohortBadgeHtml(meta)}`;
+  }
+
+  let data;
+  try {
+    data = await loadData(communityId);
+  } catch (err) {
+    // Show error in both columns
+    document.getElementById("themeList").innerHTML =
+      `<div class="list-empty" style="color:var(--danger)">${esc(err.message)}</div>`;
+    document.getElementById("simPanel").innerHTML =
+      `<div class="error-box">
+        <h3>Could not load raw themes</h3>
+        <p>${esc(err.message)}</p>
+        <p style="margin-top:10px;font-size:13px;color:var(--muted)">
+          Expected: <code>../data/pages/${esc(communityId)}_raw_themes.json</code>
+        </p>
+      </div>`;
+    return;
+  }
+
+  state.data = data;
+  state.themes = data.themes || [];
+
+  // Wire search
+  const searchEl = document.getElementById("themeSearch");
+  searchEl.addEventListener("input", () => {
+    state.filter = searchEl.value;
+    renderThemeList();
+  });
+
+  const dl = document.getElementById("dlCsv");
+  if (dl) dl.addEventListener("click", () => {
+    const rows = filteredThemes().map(t => ({ run: t.run, name: t.name, definition: t.definition }));
+    downloadCSV(`${communityId}_raw_themes.csv`, toCSV(rows, ["run", "name", "definition"]));
+  });
+
+  renderThemeList();
+  renderSimPanel();
+}
+
+init();
+</script>

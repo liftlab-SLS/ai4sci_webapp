@@ -1,0 +1,987 @@
+<title>Pipeline Explorer — Deduped Themes</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #F7F5F0;
+    --panel: #FFFFFF;
+    --text: #1C2231;
+    --muted: #6B7180;
+    --faint: #9AA0AC;
+    --line: #E3DFD6;
+    --line-strong: #D2CCBF;
+    --accent: #2F4B7C;
+    --accent-soft: #EAEFF6;
+    --accent-2: #A8843E;
+    --accent-2-soft: #F4ECD9;
+    --chrome: #1C2231;
+    --chrome-text: #EDEBE4;
+    --danger: #A23B3B;
+    --danger-soft: #F7E9E9;
+    --danger-border: #E3C3C3;
+    --serif: Georgia, "Times New Roman", "Iowan Old Style", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", "SFMono-Regular", ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    --shadow: 0 1px 2px rgba(28,34,49,.04), 0 4px 16px rgba(28,34,49,.05);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--ground);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  a { color: var(--accent); }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---- Topbar ---- */
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--chrome); color: var(--chrome-text);
+    padding: 14px 24px; border-bottom: 3px solid var(--accent-2);
+  }
+  .topbar .mark { font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -.015em; white-space: nowrap; }
+  .topbar .mark .dot { color: var(--accent-2); }
+  .topbar .tagline { font-size: 12px; color: #A7ABB6; border-left: 1px solid #3A4256; padding-left: 16px; letter-spacing: .02em; }
+  .topbar .proto-link {
+    margin-left: 4px; white-space: nowrap; font-size: 12.5px; color: #C7CAD3;
+    text-decoration: none; border: 1px solid #3A4256; border-radius: 7px;
+    padding: 6px 11px; transition: all .12s;
+  }
+  .topbar .proto-link:first-of-type { margin-left: auto; }
+  .topbar .proto-link:hover { color: #fff; border-color: var(--accent-2); background: rgba(168,132,62,.12); }
+  .subnav {
+    display: flex; align-items: end; gap: 14px; flex-wrap: wrap;
+    padding: 14px 24px; border-bottom: 1px solid var(--line); background: #FBFAF6;
+  }
+  .subnav-block { min-width: 240px; }
+  .subnav-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--faint); font-weight: 600; margin-bottom: 6px;
+  }
+  .subnav-select {
+    min-width: 280px; max-width: 520px; width: min(520px, 100%);
+    font-family: var(--sans); font-size: 14px; color: var(--text);
+    padding: 9px 11px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff;
+  }
+  .subnav-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .page-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .page-tab {
+    text-decoration: none; font-size: 13px; font-weight: 600; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid #C9D6E8; border-radius: 8px; padding: 9px 12px;
+  }
+  .page-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .page-tab.disabled {
+    color: var(--faint); background: #F2F0EA; border-color: var(--line);
+    cursor: default; pointer-events: none; font-weight: 500;
+  }
+  .dl-csv { font-size: 12.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft);
+    border: 1px solid #C9D6E8; border-radius: 8px; padding: 8px 13px; cursor: pointer; white-space: nowrap; }
+  .dl-csv:hover { background: #DCE6F3; }
+
+  /* ---- Page layout ---- */
+  .page-wrap {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+  @media (max-width: 700px) { .page-wrap { padding: 20px 14px 60px; } }
+
+  /* ---- Page header ---- */
+  .page-head {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .page-head h2 { font-size: 26px; line-height: 1.15; margin-bottom: 8px; }
+  .page-head .subtitle { color: var(--muted); font-size: 14px; margin: 0; }
+  .set-badge {
+    display: inline-block; font-family: var(--mono); font-size: 11px;
+    background: var(--accent-2-soft); color: #7A5E22;
+    border: 1px solid #E0CFA6; border-radius: 6px; padding: 2px 8px;
+    vertical-align: 2px; margin-left: 8px;
+  }
+  .cohort-badge {
+    display: inline-flex; align-items: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+    background: #E8F1EA; color: #2E5E39; border: 1px solid #BFD5C3;
+    vertical-align: 2px; margin-left: 8px;
+  }
+
+  /* ---- Toolbar ---- */
+  .toolbar {
+    display: flex; gap: 10px; margin-bottom: 18px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar .search-wrap { flex: 1; min-width: 180px; }
+  .search-box {
+    width: 100%; padding: 9px 12px; font-size: 14px; font-family: var(--sans);
+    border: 1px solid var(--line-strong); border-radius: 8px;
+    background: #fff; color: var(--text);
+  }
+  .search-box:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .sort-select {
+    padding: 9px 10px; font-size: 13.5px; font-family: var(--sans);
+    border: 1px solid var(--line-strong); border-radius: 8px;
+    background: #fff; color: var(--text); min-width: 160px;
+  }
+  .sort-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .theme-count {
+    font-size: 13px; color: var(--muted); white-space: nowrap;
+  }
+  .theme-count strong { color: var(--text); }
+
+  /* ---- Pass toggle ---- */
+  .pass-toggle {
+    display: flex; border: 1px solid var(--line-strong); border-radius: 8px;
+    overflow: hidden; flex: none;
+  }
+  .pass-btn {
+    background: #fff; border: none; padding: 8px 14px; font-size: 13px;
+    font-family: var(--sans); color: var(--muted); cursor: pointer;
+    white-space: nowrap; transition: all .12s; line-height: 1.2;
+  }
+  .pass-btn:not(:last-child) { border-right: 1px solid var(--line-strong); }
+  .pass-btn:hover { background: var(--accent-soft); color: var(--accent); }
+  .pass-btn.active {
+    background: var(--accent); color: #fff; font-weight: 600;
+  }
+  .pass-btn .pass-n {
+    font-family: var(--mono); font-size: 11px; opacity: .75; margin-left: 4px;
+  }
+  .pass-btn.active .pass-n { opacity: .85; }
+
+  /* ---- Theme list ---- */
+  .theme-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .theme-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .theme-card.expanded { border-color: var(--line-strong); }
+
+  .theme-row {
+    display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px;
+  }
+  .theme-main { flex: 1; min-width: 0; }
+  .theme-name {
+    font-family: var(--serif); font-size: 15.5px; line-height: 1.35;
+    margin-bottom: 5px; color: var(--text);
+  }
+  .theme-def { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  .theme-badges {
+    display: flex; gap: 7px; align-items: center; flex: none;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+  .badge {
+    font-family: var(--mono); font-size: 11.5px; padding: 3px 9px;
+    border-radius: 999px; white-space: nowrap; font-weight: 600; border: 1px solid;
+  }
+  .badge-freq {
+    background: var(--accent-soft); color: var(--accent); border-color: #C9D6E8;
+  }
+  .badge-members {
+    background: var(--accent-2-soft); color: #7A5E22; border-color: #E0CFA6;
+  }
+
+  .show-sim-btn {
+    background: none; border: 1px solid var(--line-strong); border-radius: 7px;
+    font-size: 12.5px; color: var(--accent); padding: 5px 11px;
+    white-space: nowrap; flex: none; transition: all .12s; margin-top: 2px;
+  }
+  .show-sim-btn:hover { background: var(--accent-soft); border-color: #C9D6E8; }
+  .theme-card.expanded .show-sim-btn {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .show-sim-btn .chev { display: inline-block; transition: transform .15s; }
+  .theme-card.expanded .show-sim-btn .chev { transform: rotate(90deg); }
+
+  /* ---- Merge lineage panel ---- */
+  .lineage-panel {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 16px;
+    margin-bottom: 14px;
+  }
+  .lineage-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 10px;
+  }
+  .lineage-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--faint); font-weight: 600;
+  }
+  .lineage-summary {
+    font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.5;
+  }
+  .lineage-list {
+    display: flex; flex-direction: column; gap: 7px;
+    max-height: 320px; overflow: auto; padding-right: 2px;
+  }
+  .lineage-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 11px; border-radius: 8px; background: #fff;
+    border: 1px solid var(--line);
+  }
+  .lineage-row.jumpable { cursor: pointer; }
+  .lineage-row.jumpable:hover,
+  .lineage-row.jumpable:focus-visible {
+    border-color: #C9D6E8; background: var(--accent-soft); outline: none;
+  }
+  .lineage-rank {
+    font-family: var(--mono); font-size: 11px; color: var(--faint);
+    flex: none; width: 26px; text-align: right; padding-top: 1px;
+  }
+  .lineage-main { flex: 1; min-width: 0; }
+  .lineage-name {
+    font-size: 13.5px; color: var(--text); line-height: 1.45;
+  }
+  .lineage-hint {
+    font-size: 11.5px; color: var(--faint); margin-top: 4px;
+  }
+  .lineage-badges {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
+    flex: none; margin-top: 1px;
+  }
+
+  /* ---- Similarity panel ---- */
+  .sim-panel {
+    border-top: 1px solid var(--line); background: #FBFAF6;
+    padding: 14px 16px 18px;
+  }
+  .sim-panel-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .sim-panel-head .eyebrow {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--faint); font-weight: 600;
+  }
+  .residual-note {
+    font-size: 12.5px; padding: 4px 12px; border-radius: 999px; font-weight: 600;
+    border: 1px solid;
+  }
+  .residual-note.warn {
+    background: #FEF3E2; color: #8A5800; border-color: #EDD9A3;
+  }
+  .residual-note.ok {
+    background: #EAF4EC; color: #2A6B3C; border-color: #B5D9BF;
+  }
+
+  .sim-list { display: flex; flex-direction: column; gap: 5px; }
+  .sim-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 10px; border-radius: 7px; cursor: pointer;
+    border: 1px solid transparent; transition: all .1s;
+  }
+  .sim-row:hover { background: #fff; border-color: var(--line); }
+  .cosine-bar-wrap {
+    display: flex; align-items: center; gap: 7px; flex: none; width: 110px;
+  }
+  .cosine-val {
+    font-family: var(--mono); font-size: 12px; font-weight: 700; flex: none;
+    width: 38px; text-align: right;
+  }
+  .cosine-val.high { color: var(--danger); }
+  .cosine-val.med { color: var(--accent-2); }
+  .cosine-val.low { color: var(--muted); }
+  .cosine-bar-bg {
+    flex: 1; height: 5px; background: var(--line); border-radius: 3px; overflow: hidden;
+  }
+  .cosine-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); }
+  .cosine-bar-fill.high { background: var(--danger); }
+  .cosine-bar-fill.med { background: var(--accent-2); }
+  .sim-name {
+    flex: 1; min-width: 0; font-size: 13.5px; line-height: 1.4; color: var(--text);
+  }
+  .sim-rank {
+    font-family: var(--mono); font-size: 11px; color: var(--faint); flex: none; width: 22px; text-align: right;
+  }
+
+  /* ---- State views ---- */
+  .center-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 280px; gap: 14px; text-align: center; color: var(--muted);
+    font-size: 15px;
+  }
+  .spinner {
+    width: 30px; height: 30px; border: 3px solid var(--line); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+
+  .note {
+    border-radius: var(--radius); padding: 16px 20px; font-size: 14.5px; line-height: 1.55;
+    border: 1px solid;
+  }
+  .note.info { background: var(--accent-2-soft); border-color: #E7D9B8; color: #6E551C; }
+  .note.error { background: var(--danger-soft); border-color: var(--danger-border); color: var(--danger); }
+  .note .note-title { font-weight: 700; margin-bottom: 4px; }
+
+  .empty-state { color: var(--muted); font-size: 14px; padding: 16px 0; }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+
+<header class="topbar">
+  <span class="mark">Pipeline Explorer<span class="dot">.</span></span>
+  <span class="tagline">Debates in legal scholarship, from abstract to consensus</span>
+  <a class="proto-link" href="../">← Explorer</a>
+</header>
+<div class="subnav">
+  <div class="subnav-block">
+    <div class="subnav-label">Community</div>
+    <select id="communitySelect" class="subnav-select" aria-label="Select community"></select>
+  </div>
+  <div>
+    <div class="subnav-label">Pages</div>
+    <div class="page-tabs" id="pageTabs"></div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div id="root">
+    <div class="center-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <div>Loading themes…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   State
+   ============================================================ */
+const state = {
+  data: null,          // currently displayed JSON (points to pass1 or pass2)
+  dataPass1: null,     // pass1 JSON (themes_consolidated)
+  dataPass2: null,     // pass2 JSON (themes_consolidated_pass2), null if not available
+  pass1ByName: {},     // pass1 theme name -> theme.i
+  pass: "pass1",       // "pass1" | "pass2"
+  query: "",           // live search filter
+  sort: "frequency",   // "frequency" | "n_members" | "alpha"
+  expanded: null,      // index of the theme whose sim panel is open (null = none)
+  pageIndex: null,
+};
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+const esc = (s) => String(s == null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+
+function pageLabel(meta) {
+  const explorerLabel = String((meta && meta.explorer_label) || "").trim();
+  if (explorerLabel) return explorerLabel;
+  const id = String((meta && meta.id) || "").trim();
+  const label = String((meta && meta.label) || "").trim();
+  const fromId = id.match(/^community_(\d+)$/);
+  if (fromId) return `Community ${fromId[1]}`;
+  const fromLabel = label.match(/^community_(\d+)\b/i);
+  if (fromLabel) return `Community ${fromLabel[1]}`;
+  return label || id;
+}
+
+function pageSelectLabel(meta) {
+  const base = pageLabel(meta);
+  const nPapers = Number((meta && meta.n_papers) || 0);
+  return nPapers ? `${base} — ${nPapers.toLocaleString()} papers` : base;
+}
+
+function tabLabel(base, count) {
+  const n = Number(count || 0);
+  return n ? `${base} (${n.toLocaleString()})` : base;
+}
+
+function countText(n) {
+  return Number(n || 0).toLocaleString();
+}
+
+function cohortBadgeHtml(meta) {
+  return meta && meta.is_full_scale_1pct ? '<span class="cohort-badge">Full-scale 1%</span>' : "";
+}
+
+function pluralize(n, one, many) {
+  return Number(n || 0) === 1 ? one : many;
+}
+
+function activePassMeta() {
+  if (state.pass === "pass2") {
+    return {
+      badge: "deduped · step 2",
+      subtitle: "Themes after the second consolidation pass. Expand a theme to see which step-1 themes merged into it, then jump into step 1 to judge whether the extra consolidation became too abstract.",
+    };
+  }
+  return {
+    badge: "deduped · step 1",
+    subtitle: "Themes after the first consolidation pass. Expand a theme to inspect the raw candidate themes that were merged into it and compare them against the nearest remaining neighbors.",
+  };
+}
+
+async function loadPageIndex() {
+  try {
+    const res = await fetch("../data/pages/community_index.json", { cache: "no-cache" });
+    if (!res.ok) return { communities: [] };
+    return res.json();
+  } catch (_) {
+    return { communities: [] };
+  }
+}
+
+function buildPageTabs(communityId, meta) {
+  const tabs = [
+    {
+      key: "raw",
+      label: tabLabel("Raw themes", meta && meta.n_raw_themes),
+      href: `./raw_themes.html?community=${encodeURIComponent(communityId)}`,
+      enabled: !!(meta && meta.has_raw_themes),
+    },
+    {
+      key: "deduped",
+      label: tabLabel("Deduped themes", meta && meta.n_deduped_themes),
+      href: `./deduped_themes.html?community=${encodeURIComponent(communityId)}`,
+      enabled: !!(meta && meta.has_deduped_themes),
+    },
+  ];
+  return tabs.map(tab => {
+    const cls = ["page-tab"];
+    if (tab.key === "deduped") cls.push("active");
+    if (!tab.enabled) cls.push("disabled");
+    if (!tab.enabled) return `<span class="${cls.join(" ")}">${esc(tab.label)}</span>`;
+    return `<a class="${cls.join(" ")}" href="${tab.href}">${esc(tab.label)}</a>`;
+  }).join("");
+}
+
+function initPageChrome(requestedId) {
+  const communities = ((state.pageIndex && state.pageIndex.communities) || [])
+    .filter(c => c.has_deduped_themes);
+  const resolved = communities.some(c => c.id === requestedId)
+    ? requestedId
+    : (communities[0] && communities[0].id) || requestedId;
+  const sel = document.getElementById("communitySelect");
+  if (sel) {
+    sel.innerHTML = communities.length
+      ? communities.map(c => `<option value="${esc(c.id)}">${esc(pageSelectLabel(c))}</option>`).join("")
+      : `<option value="${esc(resolved)}">${esc(resolved)}</option>`;
+    sel.value = resolved;
+    sel.onchange = () => {
+      window.location.search = "?community=" + encodeURIComponent(sel.value);
+    };
+  }
+  const meta = communities.find(c => c.id === resolved) || null;
+  document.getElementById("pageTabs").innerHTML = buildPageTabs(resolved, meta);
+  return { communityId: resolved, meta };
+}
+
+function cosineClass(c) {
+  if (c >= 0.85) return "high";
+  if (c >= 0.70) return "med";
+  return "low";
+}
+
+function residualNote(simArr) {
+  if (!simArr || !simArr.length) return null;
+  const above85 = simArr.filter(s => s.c >= 0.85).length;
+  const above70 = simArr.filter(s => s.c >= 0.70).length;
+  if (above85 >= 1) {
+    return {
+      cls: "warn",
+      text: `${above85} neighbor${above85 > 1 ? "s" : ""} above 0.85 — possible residual duplicate${above85 > 1 ? "s" : ""}`,
+    };
+  }
+  if (above70 >= 3) {
+    return {
+      cls: "warn",
+      text: `${above70} neighbors above 0.70 — moderate residual overlap`,
+    };
+  }
+  return {
+    cls: "ok",
+    text: "No high-cosine neighbors — well separated",
+  };
+}
+
+/* ============================================================
+   Filtering & sorting
+   ============================================================ */
+function filteredThemes() {
+  const themes = state.data ? state.data.themes : [];
+  const q = state.query.trim().toLowerCase();
+  let out = q
+    ? themes.filter(t =>
+        (t.name || "").toLowerCase().includes(q) ||
+        (t.definition || "").toLowerCase().includes(q))
+    : themes;
+
+  const s = state.sort;
+  out = out.slice().sort((a, b) => {
+    if (s === "alpha") return (a.name || "").localeCompare(b.name || "");
+    if (s === "n_members") return (b.n_members || 0) - (a.n_members || 0);
+    return (b.frequency || 0) - (a.frequency || 0); // default: frequency desc
+  });
+  return out;
+}
+
+/* ============================================================
+   Render
+   ============================================================ */
+function render() {
+  const root = document.getElementById("root");
+  root.innerHTML = renderPage();
+  wire();
+}
+
+function renderPage() {
+  const d = state.data;
+  if (!d) return "";
+  const meta = ((state.pageIndex && state.pageIndex.communities) || []).find(c => c.id === d.community) || d;
+  const passMeta = activePassMeta();
+
+  const themes = filteredThemes();
+  const total = d.themes.length;
+  const shown = themes.length;
+
+  const countText = state.query
+    ? `<strong>${shown}</strong> of <strong>${total}</strong> deduped themes`
+    : `<strong>${total}</strong> deduped themes`;
+
+  return `
+    <div class="page-head">
+      <h2>${esc(pageLabel(meta))}<span class="set-badge">${esc(passMeta.badge)}</span>${cohortBadgeHtml(meta)}</h2>
+      <p class="subtitle">
+        ${esc(passMeta.subtitle)}
+      </p>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input
+          type="search"
+          class="search-box"
+          id="searchBox"
+          placeholder="Filter by name or definition…"
+          value="${esc(state.query)}"
+          autocomplete="off"
+          aria-label="Filter themes by name or definition"
+        >
+      </div>
+      <select class="sort-select" id="sortSelect" aria-label="Sort themes">
+        <option value="frequency"${state.sort === "frequency" ? " selected" : ""}>Sort: frequency ↓</option>
+        <option value="n_members"${state.sort === "n_members" ? " selected" : ""}>Sort: merged members ↓</option>
+        <option value="alpha"${state.sort === "alpha" ? " selected" : ""}>Sort: A – Z</option>
+      </select>
+      ${state.dataPass2 ? `
+      <div class="pass-toggle" id="passToggle" role="group" aria-label="Consolidation pass">
+        <button class="pass-btn${state.pass === "pass1" ? " active" : ""}" data-pass="pass1"
+          title="After first consolidation pass">Step 1<span class="pass-n">${state.dataPass1.n}</span></button>
+        <button class="pass-btn${state.pass === "pass2" ? " active" : ""}" data-pass="pass2"
+          title="After second consolidation pass">Step 2<span class="pass-n">${state.dataPass2.n}</span></button>
+      </div>` : ""}
+      <button class="dl-csv" id="dlCsv" type="button">⬇ Download CSV</button>
+      <span class="theme-count" aria-live="polite">${countText}</span>
+    </div>
+
+    <div class="theme-list" id="themeList">
+      ${themes.length ? themes.map((t, listIdx) => renderThemeCard(t, listIdx)).join("") : renderEmpty()}
+    </div>
+  `;
+}
+
+function renderEmpty() {
+  return `<div class="empty-state">No themes match "${esc(state.query)}".</div>`;
+}
+
+function renderThemeCard(t, listIdx) {
+  const isExpanded = state.expanded === t.i;
+  const simHtml = isExpanded ? renderDetailsPanel(t) : "";
+  return `
+    <div class="theme-card${isExpanded ? " expanded" : ""}" data-i="${t.i}" id="theme-${t.i}">
+      <div class="theme-row">
+        <div class="theme-main">
+          <div class="theme-name">${esc(t.name)}</div>
+          ${t.definition ? `<div class="theme-def">${esc(t.definition)}</div>` : ""}
+        </div>
+        <div class="theme-badges">
+          <span class="badge badge-freq" title="Frequency: appears in ${t.frequency} papers">freq ${t.frequency}</span>
+          <span class="badge badge-members" title="${t.n_members} raw themes merged into this one">${t.n_members} merged</span>
+          <button class="show-sim-btn" data-i="${t.i}" aria-expanded="${isExpanded}" aria-controls="sim-${t.i}">
+            <span class="chev">›</span> Show details
+          </button>
+        </div>
+      </div>
+      ${simHtml}
+    </div>
+  `;
+}
+
+function renderLineagePanel(t) {
+  const lineage = t.lineage;
+  if (!lineage || !Array.isArray(lineage.members) || !lineage.members.length) return "";
+
+  const sourceLevel = lineage.source_level === "pass1" ? "step-1 themes" : "raw themes";
+  const sourceCount = Number(lineage.source_count || lineage.members.length || 0);
+  const rawMemberCount = Number(lineage.raw_member_count || t.n_members || 0);
+  const frequency = Number(t.frequency || 0);
+  const summary = lineage.source_level === "pass1"
+    ? `${countText(sourceCount)} ${sourceLevel} merged into this step-2 theme, covering ${countText(rawMemberCount)} raw ${pluralize(rawMemberCount, "theme", "themes")} across ${countText(frequency)} ${pluralize(frequency, "paper", "papers")}. Click a step-1 theme to jump straight into the earlier pass.`
+    : `${countText(rawMemberCount)} raw ${pluralize(rawMemberCount, "theme", "themes")} merged into this step-1 theme across ${countText(frequency)} ${pluralize(frequency, "paper", "papers")}.`;
+
+  const rows = lineage.members.map((member, idx) => {
+    const jumpI = lineage.source_level === "pass1"
+      ? state.pass1ByName[String(member.name || "")]
+      : null;
+    const jumpable = Number.isInteger(jumpI);
+    return `
+      <div class="lineage-row${jumpable ? " jumpable" : ""}"${jumpable ? ` data-member-jump="${jumpI}" data-member-pass="pass1" role="button" tabindex="0" title="Switch to step 1 and open this source theme"` : ""}>
+        <div class="lineage-rank">${idx + 1}</div>
+        <div class="lineage-main">
+          <div class="lineage-name">${esc(member.name)}</div>
+          ${jumpable ? '<div class="lineage-hint">Open this step-1 theme in the earlier pass</div>' : ""}
+        </div>
+        ${lineage.source_level === "pass1" ? `
+        <div class="lineage-badges">
+          <span class="badge badge-freq" title="This step-1 theme appears in ${member.frequency} papers">freq ${member.frequency}</span>
+          <span class="badge badge-members" title="${member.n_members} raw themes merged into this step-1 theme">${member.n_members} raw</span>
+        </div>` : ""}
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="lineage-panel">
+      <div class="lineage-head">
+        <span class="lineage-title">Merged From ${esc(sourceLevel)}</span>
+        <span class="residual-note ok">${countText(sourceCount)} ${esc(sourceLevel)}</span>
+      </div>
+      <div class="lineage-summary">${esc(summary)}</div>
+      <div class="lineage-list">
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
+function renderDetailsPanel(t) {
+  const themes = state.data.themes;
+  const sim = t.sim || [];
+  const note = residualNote(sim);
+
+  const rows = sim.map((s, rank) => {
+    const neighbor = themes[s.j];
+    if (!neighbor) return "";
+    const cls = cosineClass(s.c);
+    const fillPct = Math.round(s.c * 100);
+    return `
+      <div class="sim-row" data-jump="${neighbor.i}" role="button" tabindex="0"
+           title="Click to jump to this theme">
+        <span class="sim-rank">${rank + 1}</span>
+        <div class="cosine-bar-wrap">
+          <span class="cosine-val ${cls}">${s.c.toFixed(2)}</span>
+          <div class="cosine-bar-bg" aria-hidden="true">
+            <div class="cosine-bar-fill ${cls}" style="width:${fillPct}%"></div>
+          </div>
+        </div>
+        <div class="sim-name">${esc(neighbor.name)}</div>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <div class="sim-panel" id="sim-${t.i}" role="region" aria-label="Most similar themes">
+      ${renderLineagePanel(t)}
+      <div class="sim-panel-head">
+        <span class="eyebrow">Top ${sim.length} most similar deduped themes</span>
+        ${note ? `<span class="residual-note ${note.cls}">${esc(note.text)}</span>` : ""}
+      </div>
+      <div class="sim-list">
+        ${rows || '<div class="empty-state">No similarity data available.</div>'}
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   Wiring
+   ============================================================ */
+function toCSV(rows, headers) {
+  const q = v => { v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  return [headers.join(","), ...rows.map(r => headers.map(h => q(r[h])).join(","))].join("\n");
+}
+function downloadCSV(filename, csv) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function wire() {
+  const searchBox = document.getElementById("searchBox");
+  if (searchBox) {
+    searchBox.addEventListener("input", () => {
+      state.query = searchBox.value;
+      rerenderList();
+    });
+  }
+
+  const sortSelect = document.getElementById("sortSelect");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      state.sort = sortSelect.value;
+      rerenderList();
+    });
+  }
+
+  const passToggle = document.getElementById("passToggle");
+  if (passToggle) passToggle.addEventListener("click", (ev) => {
+    const btn = ev.target.closest(".pass-btn");
+    if (!btn) return;
+    const p = btn.getAttribute("data-pass");
+    if (p === state.pass) return;
+    state.pass = p;
+    state.data = p === "pass2" ? state.dataPass2 : state.dataPass1;
+    state.query = "";
+    state.expanded = null;
+    render();
+  });
+
+  const dl = document.getElementById("dlCsv");
+  if (dl) dl.addEventListener("click", () => {
+    const rows = filteredThemes().map(t => ({
+      name: t.name,
+      definition: t.definition,
+      frequency: t.frequency,
+      n_members: t.n_members,
+      source_level: t.lineage ? t.lineage.source_level : "",
+      source_count: t.lineage ? t.lineage.source_count : "",
+      merged_from: t.lineage ? t.lineage.members.map(m => m.name).join(" | ") : "",
+    }));
+    const cid = (state.data && state.data.community) || "community";
+    downloadCSV(`${cid}_deduped_themes.csv`, toCSV(rows, ["name", "definition", "frequency", "n_members", "source_level", "source_count", "merged_from"]));
+  });
+
+  wireThemeList();
+}
+
+function wireThemeList() {
+  const list = document.getElementById("themeList");
+  if (!list) return;
+
+  list.addEventListener("click", (ev) => {
+    // Show/hide sim panel button
+    const simBtn = ev.target.closest(".show-sim-btn");
+    if (simBtn) {
+      const i = Number(simBtn.getAttribute("data-i"));
+      state.expanded = (state.expanded === i) ? null : i;
+      rerenderList();
+      return;
+    }
+    // Jump to neighbor
+    const simRow = ev.target.closest(".sim-row[data-jump]");
+    if (simRow) {
+      const targetI = Number(simRow.getAttribute("data-jump"));
+      jumpToTheme(targetI);
+      return;
+    }
+    const lineageRow = ev.target.closest(".lineage-row[data-member-jump]");
+    if (lineageRow) {
+      const targetI = Number(lineageRow.getAttribute("data-member-jump"));
+      const targetPass = lineageRow.getAttribute("data-member-pass");
+      jumpToTheme(targetI, targetPass);
+    }
+  });
+
+  list.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" || ev.key === " ") {
+      const simRow = ev.target.closest(".sim-row[data-jump]");
+      if (simRow) {
+        ev.preventDefault();
+        const targetI = Number(simRow.getAttribute("data-jump"));
+        jumpToTheme(targetI);
+        return;
+      }
+      const lineageRow = ev.target.closest(".lineage-row[data-member-jump]");
+      if (lineageRow) {
+        ev.preventDefault();
+        const targetI = Number(lineageRow.getAttribute("data-member-jump"));
+        const targetPass = lineageRow.getAttribute("data-member-pass");
+        jumpToTheme(targetI, targetPass);
+      }
+    }
+  });
+}
+
+/* Re-render only the list + count (keeps toolbar inputs stable) */
+function rerenderList() {
+  const themes = filteredThemes();
+  const d = state.data;
+  const total = d ? d.themes.length : 0;
+  const shown = themes.length;
+
+  const listEl = document.getElementById("themeList");
+  const countEl = document.querySelector(".theme-count");
+
+  if (listEl) {
+    listEl.innerHTML = themes.length
+      ? themes.map((t, idx) => renderThemeCard(t, idx)).join("")
+      : renderEmpty();
+    // Do NOT re-attach listeners here: the click/keydown handlers are DELEGATED on the
+    // persistent #themeList container (attached once in wire()). Re-attaching on every
+    // re-render stacks duplicate listeners → cascading re-renders that freeze the tab.
+  }
+
+  if (countEl) {
+    const q = state.query;
+    countEl.innerHTML = q
+      ? `<strong>${shown}</strong> of <strong>${total}</strong> deduped themes`
+      : `<strong>${total}</strong> deduped themes`;
+  }
+}
+
+/* Jump to a theme by its .i index: clear filter if needed, expand, scroll */
+function jumpToTheme(targetI, targetPass) {
+  if (targetPass && targetPass !== state.pass) {
+    state.pass = targetPass;
+    state.data = targetPass === "pass2" ? state.dataPass2 : state.dataPass1;
+    state.expanded = null;
+    render();
+  }
+
+  // The target must be in themes[] by index
+  if (!state.data) return;
+  const theme = state.data.themes[targetI];
+  if (!theme) return;
+
+  // If the current filter hides this theme, clear it
+  const q = state.query.trim().toLowerCase();
+  if (q) {
+    const visible = (theme.name || "").toLowerCase().includes(q) ||
+                    (theme.definition || "").toLowerCase().includes(q);
+    if (!visible) {
+      state.query = "";
+      const box = document.getElementById("searchBox");
+      if (box) box.value = "";
+    }
+  }
+
+  // Expand the target (collapse the current one only if different)
+  state.expanded = targetI;
+  rerenderList();
+
+  // Scroll into view
+  const el = document.getElementById("theme-" + targetI);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    // Brief highlight
+    el.style.outline = "2px solid var(--accent-2)";
+    setTimeout(() => { el.style.outline = ""; }, 1200);
+  }
+}
+
+/* ============================================================
+   Error / empty states
+   ============================================================ */
+function showState(html) {
+  document.getElementById("root").innerHTML = html;
+}
+
+function showLoading() {
+  showState(`<div class="center-state">
+    <div class="spinner" aria-hidden="true"></div>
+    <div>Loading themes…</div>
+  </div>`);
+}
+
+function showError(msg) {
+  showState(`<div class="note error">
+    <div class="note-title">Could not load themes</div>
+    ${esc(msg)}
+  </div>`);
+}
+
+function showNotRun(community) {
+  showState(`<div class="note info">
+    <div class="note-title">Theme consolidation hasn't been run for this community yet.</div>
+    Deduped theme data is only available for communities where the consolidation pipeline has
+    completed. <code>${esc(community)}</code> doesn't have a deduped-themes file yet.
+  </div>`);
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+async function init() {
+  state.pageIndex = await loadPageIndex();
+  const { communityId: community, meta } = initPageChrome(
+    new URLSearchParams(window.location.search).get("community") || "community_177"
+  );
+  if (meta) document.title = `Pipeline Explorer — ${pageLabel(meta)} Deduped Themes`;
+
+  const url1 = `../data/pages/${encodeURIComponent(community)}_deduped_themes.json`;
+  const url2 = `../data/pages/${encodeURIComponent(community)}_deduped_themes_pass2.json`;
+
+  showLoading();
+
+  // Load pass 1 (required)
+  let resp;
+  try {
+    resp = await fetch(url1, { cache: "no-cache" });
+  } catch (e) {
+    showError("Network error: " + e.message);
+    return;
+  }
+
+  if (resp.status === 404) {
+    showNotRun(community);
+    return;
+  }
+
+  if (!resp.ok) {
+    showError(`Server returned ${resp.status} for ${url1}`);
+    return;
+  }
+
+  let data1;
+  try {
+    data1 = await resp.json();
+  } catch (e) {
+    showError("Could not parse theme data: " + e.message);
+    return;
+  }
+
+  if (!Array.isArray(data1.themes) || !data1.themes.length) {
+    showState(`<div class="note info">
+      <div class="note-title">No deduped themes found.</div>
+      The file loaded but contains no themes.
+    </div>`);
+    return;
+  }
+
+  // Load pass 2 (optional — silently skip if missing)
+  try {
+    const r2 = await fetch(url2, { cache: "no-cache" });
+    if (r2.ok) {
+      const data2 = await r2.json();
+      if (Array.isArray(data2.themes) && data2.themes.length) {
+        state.dataPass2 = data2;
+      }
+    }
+  } catch (e) { /* pass2 not available */ }
+
+  state.dataPass1 = data1;
+  state.pass1ByName = Object.fromEntries(data1.themes.map(t => [String(t.name || ""), t.i]));
+  state.data = data1;
+  state.pass = "pass1";
+  render();
+}
+
+init();
+</script>
