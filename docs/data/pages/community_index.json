@@ -12,7 +12,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -27,7 +27,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -42,7 +42,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -57,7 +57,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -72,7 +72,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -87,7 +87,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -102,7 +102,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -117,7 +117,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -132,7 +132,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -147,7 +147,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -162,7 +162,7 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
@@ -177,18 +177,18 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
   },
   {
    "id": "community_14",
    "label": "community_14 — 552 papers (gpt-5.6-luna)",
-   "explorer_label": "14 — arbitration & dispute resolution",
+   "explorer_label": "",
    "n_papers": 552,
    "n_raw_themes": 3262,
    "n_deduped_themes": 220,
    "n_deduped_themes_pass2": 103,
-   "has_questions": true,
+   "has_questions": false,
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
@@ -207,68 +207,8 @@
    "has_raw_themes": true,
    "has_deduped_themes": true,
    "has_deduped_themes_pass2": true,
-   "in_explorer": false,
+   "in_explorer": true,
    "is_full_scale_1pct": true
-  },
-  {
-   "id": "community_130",
-   "label": "130 — promissory & gratuitous promises",
-   "explorer_label": "130 — promissory & gratuitous promises",
-   "n_papers": 264,
-   "n_raw_themes": 401,
-   "n_deduped_themes": 0,
-   "n_deduped_themes_pass2": 0,
-   "has_questions": true,
-   "has_raw_themes": true,
-   "has_deduped_themes": false,
-   "has_deduped_themes_pass2": false,
-   "in_explorer": true,
-   "is_full_scale_1pct": false
-  },
-  {
-   "id": "community_131",
-   "label": "131 — contract interpretation & gap-filling",
-   "explorer_label": "131 — contract interpretation & gap-filling",
-   "n_papers": 278,
-   "n_raw_themes": 400,
-   "n_deduped_themes": 123,
-   "n_deduped_themes_pass2": 92,
-   "has_questions": true,
-   "has_raw_themes": true,
-   "has_deduped_themes": true,
-   "has_deduped_themes_pass2": true,
-   "in_explorer": true,
-   "is_full_scale_1pct": false
-  },
-  {
-   "id": "community_177",
-   "label": "177 — sovereign debt & boilerplate stickiness",
-   "explorer_label": "177 — sovereign debt & boilerplate stickiness",
-   "n_papers": 162,
-   "n_raw_themes": 399,
-   "n_deduped_themes": 142,
-   "n_deduped_themes_pass2": 116,
-   "has_questions": true,
-   "has_raw_themes": true,
-   "has_deduped_themes": true,
-   "has_deduped_themes_pass2": true,
-   "in_explorer": true,
-   "is_full_scale_1pct": false
-  },
-  {
-   "id": "community_225",
-   "label": "225 — contract theory & remedies",
-   "explorer_label": "225 — contract theory & remedies",
-   "n_papers": 180,
-   "n_raw_themes": 402,
-   "n_deduped_themes": 0,
-   "n_deduped_themes_pass2": 0,
-   "has_questions": true,
-   "has_raw_themes": true,
-   "has_deduped_themes": false,
-   "has_deduped_themes_pass2": false,
-   "in_explorer": true,
-   "is_full_scale_1pct": false
   }
  ]
 }

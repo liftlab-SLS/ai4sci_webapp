@@ -1,6 +1,7 @@
 # GitHub Pages Bundle
 
 This folder is ready to publish as a static GitHub Pages site.
+It includes only the full-scale 1% PI-facing explorer data.
 
 ## Publish
 
